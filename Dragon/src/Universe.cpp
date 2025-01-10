@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Dragon/CallingContext.h"
 
+#include "Backwards/Engine/Logger.h"
 #include "Backwards/Engine/FatalException.h"
 #include "Backwards/Types/ValueType.h"
 
@@ -65,13 +66,13 @@ namespace Dragon
             context.environment = context.machine->environment;
             result = entity->update(context);
           }
-         catch (const Backwards::Types::TypedOperationException&)
+         catch (const Backwards::Types::TypedOperationException& e)
           {
-            // This entity is dead.
+            context.logger->log("Entity >" + entity->name + "< has died: " + e.what());
           }
-         catch (const Backwards::Engine::FatalException&)
+         catch (const Backwards::Engine::FatalException& e)
           {
-            // This entity is dead.
+            context.logger->log("Entity >" + entity->name + "< has died: " + e.what());
           }
          if (nullptr != entity->output.get())
           {
@@ -142,7 +143,7 @@ namespace Dragon
              }
             else
              {
-               throw Backwards::Types::TypedOperationException("Load failed: loaded value was not a Dictionary.");
+               throw Backwards::Types::TypedOperationException("Loaded value was not a Dictionary.");
              }
           }
          catch (const Backwards::Types::TypedOperationException& e)
