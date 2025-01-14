@@ -51,7 +51,7 @@ namespace Main
 
    void LoadEntities(Dragon::CallingContext& context, const std::map<std::string, std::string>& entities, const std::string& initialEntity, const std::string& initialState);
 
-   void LoadSprites(const std::map<std::string, std::string>& sprites, int scale);
+   void LoadSprites(const std::map<std::string, std::string>& sprites);
    bool SDL_Init(const Settings& settings);
    void SDL_Quit(void);
  }
@@ -103,7 +103,7 @@ int WinMain (int /*argc*/, char ** /*argv*/)
    Backwards::Engine::Scope global;
    context.globalScope = &global;
 
-   Main::LoadSprites(settings.sprites, settings.scale);
+   Main::LoadSprites(settings.sprites);
    Main::LoadEntities(context, settings.entities, settings.entity, settings.state);
 
    Main::Init(context);

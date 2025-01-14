@@ -50,35 +50,19 @@ namespace Main
 
 static SDL_Window* window = nullptr;
 static SDL_Surface* hWind = nullptr;
+static SDL_Surface* tempWind = nullptr;
 static std::map<std::string, SDL_Surface*> spriteAssets;
-
-
-SDL_Surface* scaleImage(SDL_Surface* src, int scale)
- {
-   SDL_Surface* optimized = SDL_ConvertSurface(src, hWind->format, 0);
-   SDL_FreeSurface(src);
-   SDL_Rect dest;
-   dest.x = 0;
-   dest.y = 0;
-   dest.w = optimized->w * scale;
-   dest.h = optimized->h * scale;
-   SDL_Surface* copy = SDL_CreateRGBSurfaceWithFormat(0, dest.w, dest.h, optimized->pitch, optimized->format->format);
-   SDL_SetSurfaceBlendMode(optimized, SDL_BLENDMODE_NONE);
-   SDL_SetSurfaceBlendMode(copy, SDL_BLENDMODE_NONE);
-   SDL_BlitScaled(optimized, nullptr, copy, &dest);
-   SDL_FreeSurface(optimized);
-   return copy;
- }
 
 static int spriteSize;
 static int screenSize_x;
 static int screenSize_y;
+static int screenScale;
 
-void LoadSprites(const std::map<std::string, std::string>& sprites, int scale)
+void LoadSprites(const std::map<std::string, std::string>& sprites)
  {
    for (const auto& sprite : sprites)
     {
-      spriteAssets.emplace(std::make_pair(sprite.first, scaleImage(IMG_Load(sprite.second.c_str()), scale)));
+      spriteAssets.emplace(std::make_pair(sprite.first, IMG_Load(sprite.second.c_str())));
     }
  }
 
@@ -97,14 +81,16 @@ bool SDL_Init(const Settings& settings)
    spriteSize = settings.sprite;
    screenSize_x = settings.sx;
    screenSize_y = settings.sy;
+   screenScale = settings.scale;
 
-   window = SDL_CreateWindow("Game Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenSize_x * spriteSize, screenSize_y * spriteSize, SDL_WINDOW_SHOWN);
+   window = SDL_CreateWindow("Game Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenSize_x * spriteSize * screenScale, screenSize_y * spriteSize * screenScale, SDL_WINDOW_SHOWN);
    if (nullptr == window)
     {
       return false;
     }
 
    hWind = SDL_GetWindowSurface(window);
+   tempWind = SDL_CreateRGBSurfaceWithFormat(0, screenSize_x * spriteSize, screenSize_y * spriteSize, hWind->pitch, hWind->format->format);
 
    return true;
  }
@@ -246,11 +232,16 @@ void ProcessCommands(const std::shared_ptr<Backway::Command>& outputList)
          const auto asset = spriteAssets.find(command->resource);
          if (spriteAssets.end() != asset)
           {
-            SDL_BlitSurface(asset->second, NULL, hWind, &dest);
+            SDL_BlitSurface(asset->second, NULL, tempWind, &dest);
           }
        }
       iter = iter->next;
     }
+   dest.x = 0;
+   dest.y = 0;
+   dest.w = tempWind->w * screenScale;
+   dest.h = tempWind->h * screenScale;
+   SDL_BlitScaled(tempWind, nullptr, hWind, &dest);
    SDL_UpdateWindowSurface(window);
  }
 
