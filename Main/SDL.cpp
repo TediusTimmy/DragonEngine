@@ -58,6 +58,9 @@ static int screenSize_x;
 static int screenSize_y;
 static int screenScale;
 
+static int fps;
+static int frame;
+
 void LoadSprites(const std::map<std::string, std::string>& sprites)
  {
    for (const auto& sprite : sprites)
@@ -82,6 +85,9 @@ bool SDL_Init(const Settings& settings)
    screenSize_x = settings.sx;
    screenSize_y = settings.sy;
    screenScale = settings.scale;
+
+   fps = settings.fps;
+   frame = 0;
 
    window = SDL_CreateWindow("Game Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenSize_x * spriteSize * screenScale, screenSize_y * spriteSize * screenScale, SDL_WINDOW_SHOWN);
    if (nullptr == window)
@@ -207,7 +213,15 @@ void ProcessInput(Dragon::Universe* universe)
    screenxy->value.emplace_back(std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(screenSize_x)));
    screenxy->value.emplace_back(std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(screenSize_y)));
    screenxy->value.emplace_back(std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(spriteSize)));
+   screenxy->value.emplace_back(std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(frame)));
+   screenxy->value.emplace_back(std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(fps)));
    universe->screenxy = screenxy;
+
+   ++frame;
+   if (frame == fps)
+    {
+      frame = 0;
+    }
  }
 
 void ProcessCommands(const std::shared_ptr<Backway::Command>& outputList)
