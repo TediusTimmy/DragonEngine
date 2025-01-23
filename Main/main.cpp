@@ -52,6 +52,8 @@ namespace Main
    void LoadEntities(Dragon::CallingContext& context, const std::map<std::string, std::string>& entities, const std::string& initialEntity, const std::string& initialState);
 
    void LoadSprites(const std::map<std::string, std::string>& sprites);
+   void LoadSounds(const std::map<std::string, std::string>& sounds);
+   void LoadMusic(const std::map<std::string, std::string>& songs);
    bool SDL_Init(const Settings& settings);
    void SDL_Quit(void);
  }
@@ -104,6 +106,8 @@ int WinMain (int /*argc*/, char ** /*argv*/)
    context.globalScope = &global;
 
    Main::LoadSprites(settings.sprites);
+   Main::LoadSounds(settings.sounds);
+   Main::LoadMusic(settings.songs);
    Main::LoadEntities(context, settings.entities, settings.entity, settings.state);
 
    Main::Init(context);

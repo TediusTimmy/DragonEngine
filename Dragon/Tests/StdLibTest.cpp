@@ -276,6 +276,13 @@ TEST(DragonTests, testManyExceptions)
    EXPECT_THROW(Dragon::DrawSprite(badContext, std::make_shared<Backwards::Types::StringValue>("Curly"), std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Engine::ProgrammingException);
    EXPECT_THROW(Dragon::DrawSprite(context, std::make_shared<Backwards::Types::StringValue>("Curly"), std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Types::TypedOperationException);
    EXPECT_THROW(Dragon::DrawSprite(context, std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(1.0)), std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Types::TypedOperationException);
+
+   EXPECT_NO_THROW(Dragon::PlayMusic(context, std::make_shared<Backwards::Types::StringValue>("Curly")));
+   EXPECT_THROW(Dragon::PlayMusic(badContext, std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Engine::ProgrammingException);
+   EXPECT_THROW(Dragon::PlayMusic(context, std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(1.0))), Backwards::Types::TypedOperationException);
+   EXPECT_NO_THROW(Dragon::PlaySound(context, std::make_shared<Backwards::Types::StringValue>("Curly")));
+   EXPECT_THROW(Dragon::PlaySound(badContext, std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Engine::ProgrammingException);
+   EXPECT_THROW(Dragon::PlaySound(context, std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(1.0))), Backwards::Types::TypedOperationException);
  }
 
 TEST(DragonTests, testOutputskies)

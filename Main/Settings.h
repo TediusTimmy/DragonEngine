@@ -50,6 +50,8 @@ namespace Main
       std::string state;
       std::map<std::string, std::string> entities;
       std::map<std::string, std::string> sprites;
+      std::map<std::string, std::string> songs;
+      std::map<std::string, std::string> sounds;
    };
 
  } // namespace Main

@@ -44,6 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 
 namespace Main
  {
@@ -52,6 +53,8 @@ static SDL_Window* window = nullptr;
 static SDL_Surface* hWind = nullptr;
 static SDL_Surface* tempWind = nullptr;
 static std::map<std::string, SDL_Surface*> spriteAssets;
+static std::map<std::string, Mix_Chunk*> soundAssets;
+static std::map<std::string, Mix_Music*> musicAssets;
 
 static int spriteSize;
 static int screenSize_x;
@@ -69,17 +72,39 @@ void LoadSprites(const std::map<std::string, std::string>& sprites)
     }
  }
 
+void LoadSounds(const std::map<std::string, std::string>& sounds)
+ {
+   for (const auto& sound : sounds)
+    {
+      soundAssets.emplace(std::make_pair(sound.first, Mix_LoadWAV(sound.second.c_str())));
+    }
+ }
+
+void LoadMusic(const std::map<std::string, std::string>& songs)
+ {
+   for (const auto& song : songs)
+    {
+      musicAssets.emplace(std::make_pair(song.first, Mix_LoadMUS(song.second.c_str())));
+    }
+ }
+
 bool SDL_Init(const Settings& settings)
  {
-	if (::SDL_Init(SDL_INIT_VIDEO) < 0)
-	 {
+   if (::SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+    {
       return false;
-	 }
+    }
 
-	if (0 == IMG_Init(IMG_INIT_PNG))
-	 {
+   if (0 == IMG_Init(IMG_INIT_PNG))
+    {
       return false;
-	 }
+    }
+
+   if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096) < 0)
+    {
+      return false;
+    }
+   Mix_VolumeMusic(MIX_MAX_VOLUME);
 
    spriteSize = settings.sprite;
    screenSize_x = settings.sx;
@@ -103,10 +128,11 @@ bool SDL_Init(const Settings& settings)
 
 void SDL_Quit(void)
  {
-	SDL_DestroyWindow(window);
+   SDL_DestroyWindow(window);
 
+   Mix_CloseAudio();
    IMG_Quit();
-	::SDL_Quit();
+   ::SDL_Quit();
  }
 
 static int screen_x = 0;
@@ -247,6 +273,24 @@ void ProcessCommands(const std::shared_ptr<Backway::Command>& outputList)
          if (spriteAssets.end() != asset)
           {
             SDL_BlitSurface(asset->second, NULL, tempWind, &dest);
+          }
+       }
+      else if (typeid(Dragon::Command_PlayMusic) == typeid(*iter.get()))
+       {
+         Dragon::Command_PlayMusic* command = static_cast<Dragon::Command_PlayMusic*>(iter.get());
+         const auto asset = musicAssets.find(command->song);
+         if (musicAssets.end() != asset)
+          {
+            Mix_PlayMusic(asset->second, -1);
+          }
+       }
+      else if (typeid(Dragon::Command_PlaySound) == typeid(*iter.get()))
+       {
+         Dragon::Command_PlaySound* command = static_cast<Dragon::Command_PlaySound*>(iter.get());
+         const auto asset = soundAssets.find(command->sound);
+         if (soundAssets.end() != asset)
+          {
+            Mix_PlayChannel(-1, asset->second, 0);
           }
        }
       iter = iter->next;

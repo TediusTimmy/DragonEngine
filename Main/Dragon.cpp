@@ -156,6 +156,14 @@ void LoadSettings (const std::string& fileName, Settings& settings, Backwards::E
                    {
                      populateMap(settings.sprites, iter->second);
                    }
+                  else if ("songs" == key)
+                   {
+                     populateMap(settings.songs, iter->second);
+                   }
+                  else if ("sounds" == key)
+                   {
+                     populateMap(settings.sounds, iter->second);
+                   }
                   else if ("initial_entity" == key)
                    {
                      settings.entity = getString(iter->second);

@@ -200,6 +200,50 @@ namespace Dragon
        }
     }
 
+   STDLIB_UNARY_DECL_WITH_CONTEXT(PlayMusic)
+    {
+      try
+       {
+         CallingContext& text = dynamic_cast<CallingContext&>(context);
+         if (typeid(Backwards::Types::StringValue) == typeid(*arg))
+          {
+            const std::string& name = static_cast<const Backwards::Types::StringValue&>(*arg).value;
+            text.machine->addOutput(std::make_shared<Command_PlayMusic>(name));
+            return Backwards::Engine::ConstantsSingleton::getInstance().FLOAT_ONE;
+          }
+         else
+          {
+            throw Backwards::Types::TypedOperationException("Error playing music: song name is not a string.");
+          }
+       }
+      catch (const std::bad_cast&)
+       {
+         throw Backwards::Engine::ProgrammingException("Backwards Context wasn't a Dragon Context.");
+       }
+    }
+
+   STDLIB_UNARY_DECL_WITH_CONTEXT(PlaySound)
+    {
+      try
+       {
+         CallingContext& text = dynamic_cast<CallingContext&>(context);
+         if (typeid(Backwards::Types::StringValue) == typeid(*arg))
+          {
+            const std::string& name = static_cast<const Backwards::Types::StringValue&>(*arg).value;
+            text.machine->addOutput(std::make_shared<Command_PlaySound>(name));
+            return Backwards::Engine::ConstantsSingleton::getInstance().FLOAT_ONE;
+          }
+         else
+          {
+            throw Backwards::Types::TypedOperationException("Error playing sound: effect name is not a string.");
+          }
+       }
+      catch (const std::bad_cast&)
+       {
+         throw Backwards::Engine::ProgrammingException("Backwards Context wasn't a Dragon Context.");
+       }
+    }
+
 
    static std::shared_ptr<Backway::StateMachine> makeEntity (CallingContext& text,
       const std::shared_ptr<Backwards::Types::ValueType>& first, const std::shared_ptr<Backwards::Types::ValueType>& second)

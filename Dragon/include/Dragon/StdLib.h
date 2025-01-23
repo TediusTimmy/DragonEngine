@@ -52,6 +52,8 @@ namespace Dragon
 
    STDLIB_UNARY_DECL_WITH_CONTEXT(RemoveEntity);
    STDLIB_UNARY_DECL_WITH_CONTEXT(SetScreenXY);
+   STDLIB_UNARY_DECL_WITH_CONTEXT(PlayMusic);
+   STDLIB_UNARY_DECL_WITH_CONTEXT(PlaySound);
 
 #define STDLIB_BINARY_DECL_WITH_CONTEXT(x) \
    std::shared_ptr<Backwards::Types::ValueType> x (Backwards::Engine::CallingContext& context, \

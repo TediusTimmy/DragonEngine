@@ -52,6 +52,20 @@ public:
    Command_Move(int x, int y, int sx, int sy) : x(x), y(y), sx(sx), sy(sy) { }
  };
 
+class Command_PlayMusic final : public Backway::Command
+ {
+public:
+   std::string song;
+   Command_PlayMusic(const std::string& song) : song(song) { }
+ };
+
+class Command_PlaySound final : public Backway::Command
+ {
+public:
+   std::string sound;
+   Command_PlaySound(const std::string& sound) : sound(sound) { }
+ };
+
  } // namespace Dragon
 
 #endif /* DRAGON_COMMANDS_H */

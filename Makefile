@@ -13,7 +13,7 @@ ifeq "$(MAKECMDGOALS)" "release"
    CCP := x86_64-w64-mingw32-g++.exe
    CITY_FLAG := -D_MSC_VER
    FINAL_BINARY := bin/Engine.exe
-   LINKING_FLAGS := -lSDL2_image -lSDL2 -Wl,-subsystem,windows
+   LINKING_FLAGS := -lSDL2_mixer -lSDL2_image -lSDL2 -Wl,-subsystem,windows
 
    CFLAGS += -O2
    BFLAGS += -s
@@ -23,7 +23,7 @@ ifeq "$(MAKECMDGOALS)" "debug"
    CCP := x86_64-w64-mingw32-g++.exe
    CITY_FLAG := -D_MSC_VER
    FINAL_BINARY := bin/Engine.exe
-   LINKING_FLAGS := -lSDL2_image -lSDL2 -Wl,-subsystem,windows
+   LINKING_FLAGS := -lSDL2_mixer -lSDL2_image -lSDL2 -Wl,-subsystem,windows
 
    CFLAGS += -O0 -g
 endif

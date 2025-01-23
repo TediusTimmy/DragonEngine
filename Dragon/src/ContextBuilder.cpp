@@ -65,9 +65,11 @@ namespace Dragon
       Backwards::Parser::ContextBuilder::addFunction("GetMyName", std::make_shared<Backwards::Engine::StandardConstantFunctionWithContext>(GetMyName), 0U, global);
       Backwards::Parser::ContextBuilder::addFunction("GetScreenXY", std::make_shared<Backwards::Engine::StandardConstantFunctionWithContext>(GetScreenXY), 0U, global);
 
-    // 2
+    // 4
       Backwards::Parser::ContextBuilder::addFunction("RemoveEntity", std::make_shared<Backwards::Engine::StandardUnaryFunctionWithContext>(RemoveEntity), 1U, global);
       Backwards::Parser::ContextBuilder::addFunction("SetScreenXY", std::make_shared<Backwards::Engine::StandardUnaryFunctionWithContext>(SetScreenXY), 1U, global);
+      Backwards::Parser::ContextBuilder::addFunction("PlayMusic", std::make_shared<Backwards::Engine::StandardUnaryFunctionWithContext>(PlayMusic), 1U, global);
+      Backwards::Parser::ContextBuilder::addFunction("PlaySound", std::make_shared<Backwards::Engine::StandardUnaryFunctionWithContext>(PlaySound), 1U, global);
 
     // 5
       Backwards::Parser::ContextBuilder::addFunction("CreateBackgroundEntity", std::make_shared<Backway::StandardBinaryFunctionWithContext>(CreateBackgroundEntity), 2U, global);
