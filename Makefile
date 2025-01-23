@@ -36,7 +36,8 @@ ifeq "$(MAKECMDGOALS)" "emscripten"
    CCP := em++
    AR := emar
    FINAL_BINARY := bin/Engine.html
-   LINKING_FLAGS := -s USE_SDL=2 --use-port=sdl2_image:formats=png --use-preload-plugins --embed-file game@/ -s SINGLE_FILE
+   LIBRARY_FLAGS := -s USE_SDL=2 --use-port=sdl2_image:formats=png --use-port=sdl2_mixer
+   LINKING_FLAGS := $(LIBRARY_FLAGS) --use-preload-plugins --embed-file game@/ -s SINGLE_FILE
 
 # potentially-evaluated-expression -- I'm not sold that this is a useful diagnostic, or a useful rule from the standard it comes out of.
    CFLAGS += -O2 -Wno-potentially-evaluated-expression
@@ -76,7 +77,7 @@ obj/MainLoop.o: Main/MainLoop.cpp
 	$(CCP) $(CFLAGS) $(D_INCLUDE) -c -o obj/MainLoop.o Main/MainLoop.cpp
 
 obj/SDL.o: Main/SDL.cpp
-	$(CCP) $(CFLAGS) $(D_INCLUDE) -c -o obj/SDL.o Main/SDL.cpp
+	$(CCP) $(CFLAGS) $(D_INCLUDE) $(LIBRARY_FLAGS) -c -o obj/SDL.o Main/SDL.cpp
 
 
 bin/SlowFloatTest.exe: lib/SlowFloat.a | bin
