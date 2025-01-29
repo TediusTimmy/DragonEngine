@@ -374,6 +374,7 @@ namespace Dragon
                   entity->update(text);
                   text.machine = saveMachine;
                   text.environment = saveEnvironment;
+                  Universe::addAll(saveMachine->output, entity->output);
                 }
                catch (...)
                 {

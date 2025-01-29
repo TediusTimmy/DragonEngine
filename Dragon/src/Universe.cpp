@@ -74,19 +74,7 @@ namespace Dragon
           {
             context.logger->log("Entity >" + entity->name + "< has died: " + e.what());
           }
-         if (nullptr != entity->output.get())
-          {
-            if (nullptr == output.get())
-             {
-               output = entity->output;
-             }
-            else
-             {
-               output->last->next = entity->output;
-               output->last = entity->output->last;
-             }
-            entity->output = std::shared_ptr<Backway::Command>();
-          }
+         Universe::addAll(output, entity->output);
          if (false == result)
           {
             entitiesToKill.insert(entity);
@@ -105,6 +93,23 @@ namespace Dragon
       processSingleList(context, dynamic, input, outputList);
       processSingleList(context, player, input, outputList);
       return false == background.empty();
+    }
+
+   void Universe::addAll(std::shared_ptr<Backway::Command>& dest, std::shared_ptr<Backway::Command>& src)
+    {
+      if (nullptr != src.get())
+       {
+         if (nullptr == dest.get())
+          {
+            dest = src;
+          }
+         else
+          {
+            dest->last->next = src;
+            dest->last = src->last;
+          }
+         src = std::shared_ptr<Backway::Command>();
+       }
     }
 
    void Environment::loadEntity(CallingContext& context, const std::string& name, const std::string& states)

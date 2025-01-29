@@ -188,8 +188,12 @@ TEST(DragonTests, testEntityFunctions)
    EXPECT_TRUE(universe.update(context)); // Push the button, Max
 
 
+      // The prior call to update sets machine to a valid pointer.
    res = Dragon::SendMessage(context, std::make_shared<Backwards::Types::StringValue>("Larry"), std::make_shared<Backwards::Types::StringValue>("Start"));
    ASSERT_TRUE(typeid(Backwards::Types::DictionaryValue) == typeid(*res.get()));
+
+   EXPECT_NO_THROW(Dragon::PlayMusic(context, std::make_shared<Backwards::Types::StringValue>("Curly")));
+   EXPECT_NO_THROW(Dragon::PlaySound(context, std::make_shared<Backwards::Types::StringValue>("Curly")));
 
 
    res = Dragon::RemoveEntity(context, std::make_shared<Backwards::Types::StringValue>("Larry"));
@@ -277,10 +281,8 @@ TEST(DragonTests, testManyExceptions)
    EXPECT_THROW(Dragon::DrawSprite(context, std::make_shared<Backwards::Types::StringValue>("Curly"), std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Types::TypedOperationException);
    EXPECT_THROW(Dragon::DrawSprite(context, std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(1.0)), std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Types::TypedOperationException);
 
-   EXPECT_NO_THROW(Dragon::PlayMusic(context, std::make_shared<Backwards::Types::StringValue>("Curly")));
    EXPECT_THROW(Dragon::PlayMusic(badContext, std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Engine::ProgrammingException);
    EXPECT_THROW(Dragon::PlayMusic(context, std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(1.0))), Backwards::Types::TypedOperationException);
-   EXPECT_NO_THROW(Dragon::PlaySound(context, std::make_shared<Backwards::Types::StringValue>("Curly")));
    EXPECT_THROW(Dragon::PlaySound(badContext, std::make_shared<Backwards::Types::StringValue>("Curly")), Backwards::Engine::ProgrammingException);
    EXPECT_THROW(Dragon::PlaySound(context, std::make_shared<Backwards::Types::FloatValue>(SlowFloat::SlowFloat(1.0))), Backwards::Types::TypedOperationException);
  }

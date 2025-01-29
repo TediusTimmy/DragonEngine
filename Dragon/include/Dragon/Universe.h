@@ -52,6 +52,8 @@ namespace Dragon
       std::shared_ptr<Backwards::Types::ValueType> screenxy;
 
       bool update(CallingContext&);
+
+      static void addAll(std::shared_ptr<Backway::Command>& dest, std::shared_ptr<Backway::Command>& src);
     };
 
  } // namespace Dragon
