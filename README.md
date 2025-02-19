@@ -12,7 +12,4 @@ This is broken:
 ```
    array[index]()
 ```
-This is not:
-```
-   (array[index])()
-```
+This version of Backwards fixes this bug.

@@ -295,24 +295,48 @@ namespace Parser
     {
       std::shared_ptr<Engine::Expression> lhs (builder(src, table, logger));
 
-      while ((Input::OPEN_BRACKET == src.peekNextToken().lexeme) || (Input::PERIOD == src.peekNextToken().lexeme))
+      while ((Input::OPEN_BRACKET == src.peekNextToken().lexeme) || (Input::PERIOD == src.peekNextToken().lexeme) ||
+             (Input::OPEN_PARENS == src.peekNextToken().lexeme))
        {
-         Input::Token buildToken = src.getNextToken();
-
-         std::shared_ptr<Engine::Expression> rhs;
-         if (Input::PERIOD == buildToken.lexeme)
+         if ((Input::OPEN_BRACKET == src.peekNextToken().lexeme) || (Input::PERIOD == src.peekNextToken().lexeme))
           {
-            Input::Token memberToken = src.peekNextToken();
-            expect(src, Input::IDENTIFIER, "Identifier");
-            rhs = std::make_shared<Engine::Constant>(memberToken, std::make_shared<Types::StringValue>(memberToken.text));
-          }
-         else
-          {
-            rhs = expression(src, table, logger);
-            expect(src, Input::CLOSE_BRACKET, "]");
-          }
+            Input::Token buildToken = src.getNextToken();
 
-         lhs = std::make_shared<Engine::DerefVar>(buildToken, lhs, rhs);
+            std::shared_ptr<Engine::Expression> rhs;
+            if (Input::PERIOD == buildToken.lexeme)
+             {
+               Input::Token memberToken = src.peekNextToken();
+               expect(src, Input::IDENTIFIER, "Identifier");
+               rhs = std::make_shared<Engine::Constant>(memberToken, std::make_shared<Types::StringValue>(memberToken.text));
+             }
+            else
+             {
+               rhs = expression(src, table, logger);
+               expect(src, Input::CLOSE_BRACKET, "]");
+             }
+
+            lhs = std::make_shared<Engine::DerefVar>(buildToken, lhs, rhs);
+          }
+         else if (Input::OPEN_PARENS == src.peekNextToken().lexeme)
+          {
+            Input::Token buildToken = src.getNextToken();
+
+            std::vector<std::shared_ptr<Engine::Expression> > args;
+            if (Input::CLOSE_PARENS != src.peekNextToken().lexeme)
+             {
+               args.emplace_back(expression(src, table, logger));
+
+               while (Input::SEMICOLON == src.peekNextToken().lexeme)
+                {
+                  src.getNextToken();
+                  args.emplace_back(expression(src, table, logger));
+                }
+             }
+
+            expect(src, Input::CLOSE_PARENS, ")");
+
+            lhs = std::make_shared<Engine::FunctionCall>(buildToken, lhs, args);
+          }
        }
 
       return lhs;
@@ -369,36 +393,8 @@ namespace Parser
        }
       else
        {
-         ret = functionCall(src, table, logger);
+         ret = primary(src, table, logger);
        }
-
-      return ret;
-    }
-
-    std::shared_ptr<Engine::Expression> Parser::functionCall (Input::Lexer& src, SymbolTable& table, Engine::Logger& logger)
-    {
-      std::shared_ptr<Engine::Expression> ret = primary(src, table, logger);
-
-      while (Input::OPEN_PARENS == src.peekNextToken().lexeme)
-       {
-         Input::Token buildToken = src.getNextToken();
-
-         std::vector<std::shared_ptr<Engine::Expression> > args;
-         if (Input::CLOSE_PARENS != src.peekNextToken().lexeme)
-          {
-            args.emplace_back(expression(src, table, logger));
-
-            while (Input::SEMICOLON == src.peekNextToken().lexeme)
-             {
-               src.getNextToken();
-               args.emplace_back(expression(src, table, logger));
-             }
-          }
-
-         expect(src, Input::CLOSE_PARENS, ")");
-
-         ret = std::make_shared<Engine::FunctionCall>(buildToken, ret, args);
-      }
 
       return ret;
     }
