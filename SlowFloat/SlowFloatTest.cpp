@@ -1973,13 +1973,23 @@ TEST(SlowFloatTests, testToStrings)
    EXPECT_EQ("-NaN", SlowFloat::toString(SlowFloat::SlowFloat(~255U, -32768)));
    EXPECT_EQ("Inf", SlowFloat::toString(SlowFloat::SlowFloat(0U, -32768)));
    EXPECT_EQ("-Inf", SlowFloat::toString(SlowFloat::SlowFloat(~0U, -32768)));
-   EXPECT_EQ("0.00000000e+0", SlowFloat::toString(SlowFloat::SlowFloat(0U, 0)));
-   EXPECT_EQ("-0.00000000e+0", SlowFloat::toString(SlowFloat::SlowFloat(~0U, 0)));
-   EXPECT_EQ("0.00000000e+0", SlowFloat::toString(SlowFloat::SlowFloat(0U, 10)));
-   EXPECT_EQ("-0.00000000e+0", SlowFloat::toString(SlowFloat::SlowFloat(~0U, -12)));
-   EXPECT_EQ("1.23456789e+1", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 1)));
-   EXPECT_EQ("1.23456789e+0", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 0)));
-   EXPECT_EQ("1.23456789e-1", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, -1)));
+   EXPECT_EQ("0", SlowFloat::toString(SlowFloat::SlowFloat(0U, 0)));
+   EXPECT_EQ("-0", SlowFloat::toString(SlowFloat::SlowFloat(~0U, 0)));
+   EXPECT_EQ("0", SlowFloat::toString(SlowFloat::SlowFloat(0U, 10)));
+   EXPECT_EQ("-0", SlowFloat::toString(SlowFloat::SlowFloat(~0U, -12)));
+   EXPECT_EQ("12.3456789", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 1)));
+   EXPECT_EQ("1.23456789", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 0)));
+   EXPECT_EQ("0.123456789", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, -1)));
+   EXPECT_EQ("123456789", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 8)));
+   EXPECT_EQ("1.23456789e+9", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 9)));
+   EXPECT_EQ("1.23456789e+12", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, 12)));
+   EXPECT_EQ("1.23456789e-8", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, -8)));
+   EXPECT_EQ("1.23456789e-12", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, -12)));
+   EXPECT_EQ("0.000000123456789", SlowFloat::toString(SlowFloat::SlowFloat(123456789U, -7)));
+   EXPECT_EQ("0.0000001234", SlowFloat::toString(SlowFloat::SlowFloat(123400000U, -7)));
+   EXPECT_EQ("0.0012345", SlowFloat::toString(SlowFloat::SlowFloat(123450000U, -3)));
+   EXPECT_EQ("200", SlowFloat::toString(SlowFloat::SlowFloat(200000000U, 2)));
+   EXPECT_EQ("1.23456", SlowFloat::toString(SlowFloat::SlowFloat(123456000U, 0)));
  }
 
 TEST(SlowFloatTests, testFromStrings)

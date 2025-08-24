@@ -226,8 +226,8 @@ std::string toString (const SlowFloat& arg)
    else if (isInf(arg))
       temp << "Inf";
    else if (isZero(arg))
-      temp << "0.00000000e+0";
-   else
+      temp << "0";
+   else if ((arg.exponent > 8) || (arg.exponent < -7))
     {
       uint32_t first = sig / MIN_SIGNIFICAND;
       uint32_t rest = sig % MIN_SIGNIFICAND;
@@ -235,6 +235,28 @@ std::string toString (const SlowFloat& arg)
       if (arg.exponent > -1)
          temp << '+';
       temp << arg.exponent;
+    }
+   else if (arg.exponent > -1)
+    {
+      std::string temp2 = std::to_string(sig);
+      temp2 = temp2.substr(0, arg.exponent + 1) + '.' + temp2.substr(arg.exponent + 1);
+      while ('0' == temp2[temp2.size() - 1])
+         temp2.resize(temp2.size() - 1);
+      if ('.' == temp2[temp2.size() - 1])
+         temp2.resize(temp2.size() - 1);
+      temp << temp2;
+    }
+   else
+    {
+      std::ostringstream temp2;
+      temp2 << "0.";
+      if (arg.exponent < -1)
+         temp2 << std::setw(-arg.exponent - 1)<< std::setfill('0') << '0';
+      temp2 << sig;
+      std::string temp3 = temp2.str();
+      while ('0' == temp3[temp3.size() - 1])
+         temp3.resize(temp3.size() - 1);
+      temp << temp3;
     }
 
    return temp.str();

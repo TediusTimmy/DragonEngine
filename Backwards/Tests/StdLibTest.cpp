@@ -195,7 +195,7 @@ TEST(EngineTests, testBasicEight) // The seven functions needed for the parser a
 
    res = Backwards::Engine::ToString(makeFloatValue(314.0));
    ASSERT_TRUE(typeid(Backwards::Types::StringValue) == typeid(*res.get()));
-   EXPECT_EQ("3.14000000e+2", std::dynamic_pointer_cast<Backwards::Types::StringValue>(res)->value);
+   EXPECT_EQ("314", std::dynamic_pointer_cast<Backwards::Types::StringValue>(res)->value);
 
    EXPECT_THROW(Backwards::Engine::ToString(std::make_shared<Backwards::Types::StringValue>("world")), Backwards::Types::TypedOperationException);
  }

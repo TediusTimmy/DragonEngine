@@ -229,14 +229,14 @@ TEST(ParserTests, testMoreDebugger)
    EXPECT_EQ("#3: >EnterDebugger< from line 1 in test\n#2: >BuyMeAPony< from line 1 in test\n#1: >IWantTheWorld< from line 1 in test", logger.logs[1]);
    EXPECT_EQ("In function #2: >BuyMeAPony< from line 1 in test", logger.logs[2]);
    EXPECT_EQ("These variables are in the current stack frame: x, y, z, a, b, c, i, j\nThese variables are in the current scope: l, L\nThese variables are in the global scope: g, G", logger.logs[3]);
-   EXPECT_EQ("5.00000000e+0", logger.logs[4]);
+   EXPECT_EQ("5", logger.logs[4]);
    EXPECT_EQ("\"Hello\"", logger.logs[5]);
    EXPECT_EQ("Function : EnterDebugger", logger.logs[6]);
-   EXPECT_EQ("{ \"Hello\":5.00000000e+0; \"World\":6.00000000e+0 }", logger.logs[7]);
+   EXPECT_EQ("{ \"Hello\":5; \"World\":6 }", logger.logs[7]);
    EXPECT_EQ("{ \"Hello\"; \"World\" }", logger.logs[8]);
    EXPECT_EQ("Error: Read of value before set.", logger.logs[9]);
-   EXPECT_EQ("3.00000000e+0", logger.logs[10]);
-   EXPECT_EQ("Function : BuyMeAPony [ -2.00000000e+0; -3.00000000e+0 ]", logger.logs[11]);
+   EXPECT_EQ("3", logger.logs[10]);
+   EXPECT_EQ("Function : BuyMeAPony [ -2; -3 ]", logger.logs[11]);
    EXPECT_EQ("In function #3: >EnterDebugger< from line 1 in test", logger.logs[12]);
    // Skip
    EXPECT_EQ("Didn't understand that.", logger.logs[14]);
