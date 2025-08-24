@@ -483,7 +483,7 @@ SlowFloat operator + (const SlowFloat& lhs, const SlowFloat& rhs)
             uint64_t removed;
             removed = rhd % makeShift[(expDiff - 2) + 1];
             rhd /= makeShift[(expDiff - 2) + 1];
-            if ((0U != removed) && ((0U == (rhd % 10U)) || (5U == (rhd % 10U)))) ++rhd;
+            if ((0U != removed) && (0U == (rhd % 5U))) ++rhd;
             expDiff = 2;
           }
          lhd *= makeShift[expDiff + 1];
@@ -506,7 +506,7 @@ SlowFloat operator + (const SlowFloat& lhs, const SlowFloat& rhs)
             uint64_t removed;
             removed = lhd % makeShift[(expDiff - 2) + 1];
             lhd /= makeShift[(expDiff - 2) + 1];
-            if ((0U != removed) && ((0U == (lhd % 10U)) || (5U == (lhd % 10U)))) ++lhd;
+            if ((0U != removed) && (0U == (lhd % 5U))) ++lhd;
             expDiff = 2;
           }
          rhd *= makeShift[expDiff + 1];
@@ -567,7 +567,7 @@ SlowFloat operator + (const SlowFloat& lhs, const SlowFloat& rhs)
        }
       uint64_t rem = lhd % temp;
       lhd /= temp;
-      if (decideRound(resultSign, 0 == (lhd & 1), static_cast<int64_t>(temp) - static_cast<int64_t>(2 * rem), rem == 0))
+      if (decideRound(resultSign, 0 == (lhd & 1), static_cast<int64_t>(temp) - static_cast<int64_t>(rem << 1), rem == 0))
        {
          ++lhd;
          if (lhd == BIAS)
@@ -669,7 +669,7 @@ SlowFloat operator * (const SlowFloat& lhs, const SlowFloat& rhs)
 
    uint64_t rem = lhd % temp;
    lhd /= temp;
-   if (decideRound(resultSign, 0 == (lhd & 1), static_cast<int64_t>(temp) - static_cast<int64_t>(2 * rem), rem == 0))
+   if (decideRound(resultSign, 0 == (lhd & 1), static_cast<int64_t>(temp) - static_cast<int64_t>(rem << 1), rem == 0))
     {
       ++lhd; // This can't cause an overflow.
     }
@@ -734,8 +734,7 @@ SlowFloat operator / (const SlowFloat& lhs, const SlowFloat& rhs)
    uint64_t lhd = lhs.significand ^ (getSign(lhs) ? 0xFFFFFFFFU : 0U);
    uint64_t rhd = rhs.significand ^ (getSign(rhs) ? 0xFFFFFFFFU : 0U);
 
-   lhd *= BIAS;
-   if ((lhd / rhd) >= BIAS)
+   if (lhd >= rhd)
     {
       rhd *= 10;
     }
@@ -743,10 +742,11 @@ SlowFloat operator / (const SlowFloat& lhs, const SlowFloat& rhs)
     {
       --resultExponent;
     }
+   lhd *= BIAS;
    uint64_t rem = lhd % rhd;
    lhd = lhd / rhd;
 
-   if (decideRound(resultSign, 0 == (lhd & 1), static_cast<int64_t>(rhd) - static_cast<int64_t>(2 * rem), rem == 0))
+   if (decideRound(resultSign, 0 == (lhd & 1), static_cast<int64_t>(rhd) - static_cast<int64_t>(rem << 1), rem == 0))
     {
       ++lhd; // This can never cause an overflow.
     }
