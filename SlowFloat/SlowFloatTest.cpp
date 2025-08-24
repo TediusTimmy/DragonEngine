@@ -37,12 +37,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 TEST(SlowFloatTests, testDefaultConstructor)
  {
-   EXPECT_EQ(0U, SlowFloat::SlowFloat().significand);
-   EXPECT_EQ(0, SlowFloat::SlowFloat().exponent);
+   EXPECT_EQ(0U, SlowFloat::sfZero.significand);
+   EXPECT_EQ(0, SlowFloat::sfZero.exponent);
 
    SlowFloat::SlowFloat* bob = new SlowFloat::SlowFloat(999999999U, 16383);
    delete bob;
-   bob = new SlowFloat::SlowFloat();
+   bob = new SlowFloat::SlowFloat(SlowFloat::sfZero);
    EXPECT_EQ(0U, bob->significand);
    EXPECT_EQ(0, bob->exponent);
    delete bob;
@@ -1255,7 +1255,7 @@ TEST(SlowFloatTests, testAdds)
    SlowFloat::SlowFloat negativeTwo  (~200000000U, 0);
    SlowFloat::SlowFloat positiveTen  (100000000U, 1);
    SlowFloat::SlowFloat negativeTen  (~100000000U, 1);
-   SlowFloat::SlowFloat res;
+   SlowFloat::SlowFloat res          (SlowFloat::sfZero);
 
    res = nan1 + positiveOne;
    EXPECT_EQ(1U, res.significand);
@@ -1471,7 +1471,7 @@ TEST(SlowFloatTests, testSubs)
    SlowFloat::SlowFloat nan1        (1U, -32768);
    SlowFloat::SlowFloat nan2        (2U, -32768);
    SlowFloat::SlowFloat positiveOne (100000000U, 0);
-   SlowFloat::SlowFloat res;
+   SlowFloat::SlowFloat res         (SlowFloat::sfZero);
 
    res = nan1 - positiveOne;
    EXPECT_EQ(1U, res.significand);
@@ -1627,7 +1627,7 @@ TEST(SlowFloatTests, testMuls)
    SlowFloat::SlowFloat nan2         (2U, -32768);
    SlowFloat::SlowFloat positiveOne  (100000000U, 0);
    SlowFloat::SlowFloat negativeOne  (~100000000U, 0);
-   SlowFloat::SlowFloat res;
+   SlowFloat::SlowFloat res          (SlowFloat::sfZero);
 
       // Nans
    res = nan1 * positiveOne;
@@ -1810,7 +1810,7 @@ TEST(SlowFloatTests, testDivs)
    SlowFloat::SlowFloat nan2         (2U, -32768);
    SlowFloat::SlowFloat positiveOne  (100000000U, 0);
    SlowFloat::SlowFloat negativeOne  (~100000000U, 0);
-   SlowFloat::SlowFloat res;
+   SlowFloat::SlowFloat res          (SlowFloat::sfZero);
 
       // Nans
    res = nan1 / positiveOne;
@@ -1984,7 +1984,7 @@ TEST(SlowFloatTests, testToStrings)
 
 TEST(SlowFloatTests, testFromStrings)
  {
-   SlowFloat::SlowFloat res;
+   SlowFloat::SlowFloat res (SlowFloat::sfZero);
 
    res = SlowFloat::fromString("5.0");
    EXPECT_EQ(500000000U, res.significand);

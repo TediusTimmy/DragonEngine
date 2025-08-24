@@ -46,7 +46,7 @@ namespace Backwards
 namespace Types
  {
 
-   FloatValue::FloatValue() : value(SlowFloat::SlowFloat())
+   FloatValue::FloatValue() : value(SlowFloat::sfZero)
     {
     }
 
@@ -67,7 +67,7 @@ namespace Types
 
    bool FloatValue::logical () const
     {
-      return (SlowFloat::SlowFloat() == value) ? false : true;
+      return (SlowFloat::sfZero == value) ? false : true;
     }
 
    std::shared_ptr<ValueType> FloatValue::add (const FloatValue& lhs) const

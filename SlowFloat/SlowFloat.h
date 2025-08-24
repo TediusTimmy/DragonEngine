@@ -95,7 +95,7 @@ public:
    uint32_t significand; // If msb is set, then the number is negative and ones' complemented.
    int16_t  exponent;    // Do to the stupid range, no subnormals. -32768 is reserved for special values.
 
-   SlowFloat() = default;
+   SlowFloat() = delete;
    SlowFloat(const SlowFloat&) = default;
    SlowFloat& operator = (const SlowFloat&) = default;
 
@@ -104,6 +104,7 @@ public:
    explicit operator double () const;
  };
 
+extern const SlowFloat sfZero;
 
    std::string toString (const SlowFloat&);
    SlowFloat fromString (const std::string&);
