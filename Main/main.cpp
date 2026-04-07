@@ -81,7 +81,7 @@ public:
 #endif /* __EMSCRIPTEN__ */
 
 
-#ifdef __EMSCRIPTEN__
+#if defined(__EMSCRIPTEN__) || defined(__PI__)
 int main (int /*argc*/, char ** /*argv*/)
 #else /* ! __EMSCRIPTEN__ */
 int WinMain (int /*argc*/, char ** /*argv*/)

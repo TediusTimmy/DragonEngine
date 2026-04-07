@@ -43,8 +43,16 @@ ifeq "$(MAKECMDGOALS)" "emscripten"
    CFLAGS += -O2 -Wno-potentially-evaluated-expression
 endif
 
-.PHONY: all clean release debug emscripten
-all: bin/Engine.exe
+ifeq "$(MAKECMDGOALS)" "pi"
+   FINAL_BINARY := bin/Engine
+   LINKING_FLAGS := -lSDL2_mixer -lSDL2_image -lSDL2
+
+   CFLAGS += -O2 -D__PI__
+   BFLAGS += -s
+endif
+
+.PHONY: all clean release debug emscripten pi
+all: $(FINAL_BINARY)
 
 
 clean:
@@ -61,10 +69,13 @@ debug: all
 emscripten: all
 
 
+pi: all
+
+
 test: bin/SlowFloatTest.exe bin/BackwardsTest.exe bin/BackwayTest.exe bin/DragonTest.exe
 
 
-bin/Engine.exe: lib/Dragon.a lib/Backway.a lib/Backwards.a lib/SlowFloat.a obj/city.o obj/main.o obj/Dragon.o obj/MainLoop.o obj/SDL.o | bin
+$(FINAL_BINARY): lib/Dragon.a lib/Backway.a lib/Backwards.a lib/SlowFloat.a obj/city.o obj/main.o obj/Dragon.o obj/MainLoop.o obj/SDL.o | bin
 	$(CCP) $(CFLAGS) $(BFLAGS) $(D_INCLUDE) -o $(FINAL_BINARY) obj/main.o obj/Dragon.o obj/MainLoop.o obj/SDL.o lib/Dragon.a lib/Backway.a lib/Backwards.a lib/SlowFloat.a obj/city.o $(LINKING_FLAGS)
 
 obj/main.o: Main/main.cpp
